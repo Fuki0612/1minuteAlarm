@@ -2,7 +2,7 @@
 ### CLONEしよう
 まずは以下のコマンドでこのリポジトリをクローン（自PCにコピー）しよう。
 ```
-https://github.com/Fuki0612/1minuteAlarm/
+git clone https://github.com/Fuki0612/1minuteAlarm.git
 ```
 ### ブランチを作成しよう
 クローンが済んだら、自分の作業するブランチを作成しよう。
