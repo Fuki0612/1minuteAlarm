@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _currentTime =
           '${now.hour.toString().padLeft(2, '0')}:' //Hourの表示
-          '${now.minute.toString().padLeft(2, '0')}' //Minuteの表示
+          '${now.minute.toString().padLeft(2, '0')}:' //Minuteの表示
           '${now.second.toString().padLeft(2, '0')}';
     });
   }
