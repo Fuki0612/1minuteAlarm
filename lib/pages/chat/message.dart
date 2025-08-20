@@ -22,6 +22,14 @@ class MessageBubble extends StatelessWidget {
             // 横並び
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //アイコン追加
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.green.shade100,
+                child: const Icon(
+                  Icons.person, size: 20,color: Colors.green
+                  ),
+              ),
               // メッセージ
               Flexible(
                 child: Container(
@@ -30,6 +38,11 @@ class MessageBubble extends StatelessWidget {
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
+                    color: message.isUser
+                    ?Colors.blue.shade500
+                    :Colors.grey.shade200,
+                    borderRadius:
+                    BorderRadius.circular(18),
                     // チャット タスク1 メッセージの背景色
                   ),
                   child: Text(
