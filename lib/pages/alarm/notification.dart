@@ -13,6 +13,53 @@ class SimpleNotificationService {
   static final FlutterLocalNotificationsPlugin
   _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  // シンプルな通知送信（Android対応強化）
+  static Future<void> showLocalNotification(
+    String title,
+    String message,
+  ) async {
+    // Android用：詳細設定で確実に表示
+    const androidNotificationDetail = AndroidNotificationDetails(
+      'channel_id', // channel Id
+      'channel_name', // channel Name
+      channelDescription: 'Main notification channel',
+      importance: Importance.max,
+      priority: Priority.high,
+      enableVibration: true,
+      playSound: true,
+      showWhen: true,
+      autoCancel: true,
+      ongoing: false,
+      silent: false,
+      channelShowBadge: true,
+      largeIcon: DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+    );
+    const iosNotificationDetail = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+    const notificationDetails = NotificationDetails(
+      iOS: iosNotificationDetail,
+      android: androidNotificationDetail,
+    );
+
+    try {
+      // ユニークなIDを生成してAndroid通知の重複を防ぐ
+      final int notificationId =
+          DateTime.now().millisecondsSinceEpoch % 2147483647;
+      await FlutterLocalNotificationsPlugin().show(
+        notificationId,
+        title,
+        message,
+        notificationDetails,
+      );
+      debugPrint('Android通知送信成功: $title (ID: $notificationId)');
+    } catch (e) {
+      debugPrint('Android通知送信エラー: $e');
+    }
+  }
+
   // 通知サービスの初期化
   static Future<void> initialize() async {
     // Android 初期設定
@@ -36,18 +83,58 @@ class SimpleNotificationService {
 
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse:
-          _onDidReceiveNotificationResponse, // 未実装
+      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
       onDidReceiveBackgroundNotificationResponse:
-          _onDidReceiveBackgroundNotificationResponse, // 未実装
+          _onDidReceiveBackgroundNotificationResponse,
     );
 
-    if (Platform.isIOS) {
-      await _requestIOSPermissions(); // 未実装
-    } else if (Platform.isAndroid) {
-      await _requestAndroidPermissions(); // 未実装
+    // Android通知チャンネルを作成
+    if (Platform.isAndroid) {
+      await _createAndroidNotificationChannel();
+      await _requestAndroidPermissions();
+    } else if (Platform.isIOS) {
+      await _requestIOSPermissions();
     } else {
       debugPrint('通知権限のリクエストはサポートされていません');
+    }
+
+    debugPrint('通知サービスの初期化が完了しました');
+  }
+
+  // Android通知チャンネルの作成（強化版）
+  static Future<void> _createAndroidNotificationChannel() async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'channel_id',
+      'channel_name',
+      description: 'Main notification channel for Android push notifications',
+      importance: Importance.max,
+      playSound: true,
+      enableVibration: true,
+      showBadge: true,
+      enableLights: true,
+    );
+
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
+
+    debugPrint('Android通知チャンネル作成完了: ${channel.id}');
+
+    // 通知チャンネルが正しく作成されたか確認
+    final List<AndroidNotificationChannel>? channels =
+        await _flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
+            ?.getNotificationChannels();
+
+    if (channels != null) {
+      debugPrint('作成済みAndroid通知チャンネル数: ${channels.length}');
+      for (var ch in channels) {
+        debugPrint('チャンネル: ${ch.id} - ${ch.name}');
+      }
     }
   }
 
@@ -60,13 +147,29 @@ class SimpleNotificationService {
         ?.requestPermissions(alert: true, badge: true, sound: true);
   }
 
-  // Android 通知権限のリクエスト
+  // Android 通知権限のリクエスト（強化版）
   static Future<void> _requestAndroidPermissions() async {
-    await _flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        _flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+
+    if (androidImplementation != null) {
+      // Android 13 (API 33)以降の通知権限をリクエスト
+      final bool? notificationPermission = await androidImplementation
+          .requestNotificationsPermission();
+      debugPrint('Android通知権限: $notificationPermission');
+
+      // 通知権限の状態を確認
+      final bool? enabledCheck = await androidImplementation
+          .areNotificationsEnabled();
+      debugPrint('Android通知権限確認: $enabledCheck');
+
+      if (enabledCheck != true) {
+        debugPrint('警告: Android通知権限が無効です。設定から有効にしてください。');
+      }
+    }
   }
 
   // 通知のタップ時の処理
@@ -76,44 +179,55 @@ class SimpleNotificationService {
 
   // バックグラウンドで通知を受け取った時の処理
   static Future _onDidReceiveBackgroundNotificationResponse(
-      NotificationResponse response) async {
+    NotificationResponse response,
+  ) async {
     debugPrint('onDidReceiveBackgroundNotificationResponse: $response');
   }
 
-    // 通知の送信
+  // 通知の送信（改良版）
   static Future<void> showNotification({
     required int id,
     required String title,
     required String body,
   }) async {
-    
-    // Android 用のスタイル情報
-    const androidNotificationDetails = AndroidNotificationDetails(
-      Notification.channelId,
-      Notification.channelName,
-      channelDescription: Notification.channelDescription,
-      importance: Importance.max,
-      priority: Priority.high,
-    );
+    try {
+      debugPrint('通知送信開始: ID=$id, Title=$title');
 
-    // iOS 用のスタイル情報
-    const iosNotificationDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+      // Android 用のスタイル情報
+      const androidNotificationDetails = AndroidNotificationDetails(
+        'channel_id',
+        'channel_name',
+        channelDescription: 'Main notification channel',
+        importance: Importance.max,
+        priority: Priority.high,
+        enableVibration: true,
+        playSound: true,
+        autoCancel: true,
+      );
 
-    const notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: iosNotificationDetails,
-    );
+      // iOS 用のスタイル情報
+      const iosNotificationDetails = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
 
-    await _flutterLocalNotificationsPlugin.show(
-      id,
-      title,
-      body,
-      notificationDetails,
-    );
+      const notificationDetails = NotificationDetails(
+        android: androidNotificationDetails,
+        iOS: iosNotificationDetails,
+      );
+
+      await _flutterLocalNotificationsPlugin.show(
+        id,
+        title,
+        body,
+        notificationDetails,
+      );
+
+      debugPrint('通知送信完了: ID=$id');
+    } catch (e) {
+      debugPrint('通知送信エラー: $e');
+    }
   }
 }
 
@@ -123,20 +237,15 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ホーム'),
-      ),
-      body: BottomAppBar(
-        child: ElevatedButton(
-          onPressed: () {
-            SimpleNotificationService.showNotification(
-              id: 0,
-              title: 'Hello World !',
-              body: 'Happy Coding! 🚀',
-            );
-          },
-          child: const Text('テスト'),
-        ),
+      appBar: AppBar(title: const Text('アラーム')),
+      body: ElevatedButton(
+        onPressed: () {
+          SimpleNotificationService.showLocalNotification(
+            '🔔 シンプル通知',
+            '基本的な通知が送信されました！',
+          );
+        },
+        child: const Text('テスト'),
       ),
     );
   }
