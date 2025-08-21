@@ -17,8 +17,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _currentTime =
           '${now.hour.toString().padLeft(2, '0')}:' //Hourの表示
-          '${now.minute.toString().padLeft(2, '0')}'; //Minuteの表示
-      // タイトル タスク3 Secondsの表示
+          '${now.minute.toString().padLeft(2, '0')}:' //Minuteの表示
+          '${now.second.toString().padLeft(2, '0')}';
     });
   }
 
@@ -43,6 +43,11 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Container(
             // タイトル タスク4 ここにdecorationを追加
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
