@@ -61,9 +61,7 @@ class _MyTitlePageState extends State<MyTitlePage> {
     return Scaffold(
       body: _pages(),
       bottomNavigationBar: ConvexAppBar(
-        // タイトル タスク.1
         items: [
-          // タイトル タスク.2
           TabItem(icon: Icons.home, title: 'Home'),
           TabItem(icon: Icons.alarm, title: 'Alarm'),
           TabItem(icon: Icons.chat, title: 'Chat'),
