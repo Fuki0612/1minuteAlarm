@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'pages/home/page.dart';
-import 'pages/alarm/page.dart';
-import 'pages/collection/page.dart';
-import 'pages/game/page.dart';
-import 'pages/chat/page.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,11 +60,11 @@ class _MyTitlePageState extends State<MyTitlePage> {
       bottomNavigationBar: ConvexAppBar(
         // タイトル タスク.1
         style: TabStyle.fixed,
-        color: Color(0xFF81D4FA),
+        color: Color blue[200],
         backgroundColor: Color(0xFF2196F3),
         activeColor: Color(0xFFFFFFFF),
         curveSize: 0,
-        height: 80,
+        height: 70,
         items: [
           // タイトル タスク.2
           TabItem(icon: Icons.home, title: 'Home'),
