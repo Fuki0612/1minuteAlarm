@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'dart:math';
+import 'score_page.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -11,9 +13,33 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   int score = 0;
-  int remainingSeconds = 60; // 残り時間(秒)
+  int remainingSeconds = 60; 
   Timer? _timer;
   final _player = AudioPlayer();
+  bool _isFinished = false;
+  bool _started = false;
+
+List<Widget> _buildCircleItems(double radius) {
+  final items = List.generate(12, (i) => i + 1);
+  final angleStep = 2 * pi / items.length;
+
+  return List.generate(items.length, (index) {//時計の生成
+    final angle = angleStep * index - pi / 3; 
+    final dx = radius * cos(angle);
+    final dy = radius * sin(angle);
+
+    return Align(//時計の配置
+      alignment: Alignment.center,
+      child: Transform.translate(
+        offset: Offset(dx, dy), 
+        child: Text(
+         '${items[index]}',
+         style: const TextStyle(fontSize: 32)
+        ),
+      ),
+    );
+  });
+}
 
   void _increaseScore() {//スコアを増やし再描画
     setState(() {
@@ -21,15 +47,9 @@ class _GamePageState extends State<GamePage> {
     });
   }
 
-  @override
-  void initState() { //初期化してタイマーを開始
-    super.initState();
-    _startCountdown();
-  }
-
   Future<void> _startCountdown() async {//タイマーの内容
+    _started = true;
     await _player.play(AssetSource('sounds/gamestart.mp3'));
-    await Future.delayed(const Duration(milliseconds: 100));
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
       if (!mounted) return;
@@ -39,15 +59,12 @@ class _GamePageState extends State<GamePage> {
         });
       } else {
         t.cancel();
+        setState(() {
+        _isFinished = true; // タイマー終了を通知
+      });
         // ここでゲーム終了の処理とかはここに
       }
     });
-  }
-
-  String _formatTime(int totalSeconds) {//分、秒の表記法
-    final m = totalSeconds ~/ 60;
-    final s = totalSeconds % 60;
-    return '$m:${s.toString().padLeft(2, '0')}';
   }
 
   @override//画面から離れたときなどにタイマーの処理を止める処理
@@ -58,33 +75,47 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {//UIとスコアとタイマーを表示
+    if (_isFinished){
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context)=>ScorePage(score: score),
+            ),
+       );
+      } );
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('Game')),
-      body: Stack(
-        children: [
+      body:Stack(
+       children: [
           Center(
-            child: Stack(
-              alignment:Alignment.center,
-              children:[
-                Image.asset(
-                  'lib/images/clock.png',
-                  width:450,
-                  height:450,
-                ),
-                Image.asset(
-                  'lib/images/chara.png',
-                  width:250,
-                  height:250,
-                ),
-              ]
-            )
-          ),
+            child: !_started 
+            ? ElevatedButton(
+                onPressed: _startCountdown,
+                child: Text('ゲームスタート'),
+              )
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'lib/images/chara.png',
+                      width: 400,
+                      height: 400,
+                      fit: BoxFit.cover,
+                    )
+                  ,),
+                  ..._buildCircleItems(200),
+                ]
+              ),
+            ),
           // 右上にスコアとタイマーを縦並びで表示
           Positioned(
             right: 20,
             top: 20,
             child: SafeArea(
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
@@ -95,11 +126,11 @@ class _GamePageState extends State<GamePage> {
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(width: 6),
                   Text(
-                    'Time: ${_formatTime(remainingSeconds)}',
+                    'Time: ${remainingSeconds.toString()}',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 24,
                       fontWeight: FontWeight.w600,
                       // 残り10秒で赤くする演出
                       color: remainingSeconds <= 10 ? Colors.red : Colors.black,
@@ -110,10 +141,6 @@ class _GamePageState extends State<GamePage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(//試しにボタンを押すとスコアが増えるように
-        onPressed: _increaseScore,
-        child: const Icon(Icons.add),
       ),
     );
   }
