@@ -10,6 +10,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _currentTime = '';
+  // アラーム時刻を保持する変数
+  String _alarmTime = "12:00:00";
   Timer? _timer;
 
   void _updateTime() {
@@ -37,41 +39,74 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
-            // タイトル タスク4 ここにdecorationを追加
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
+          child: Column(
+            // SingleChildScrollView内に直接Columnを配置
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 既存の現在時刻表示コンテナ
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      '現在時刻',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      _currentTime,
+                      style: const TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  '現在時刻',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                  textAlign: TextAlign.center,
+              const SizedBox(height: 50), // 現在時刻とアラーム時刻の間のスペース
+              // アラーム時刻の表示
+              Text(
+                'アラーム時刻: $_alarmTime',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
                 ),
-                Text(
-                  _currentTime,
-                  style: const TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
+              ),
+
+              const SizedBox(height: 20), // アラーム時刻と画像の間のスペース
+              // キャラクター画像の表示
+              // assetsフォルダに画像を追加し、pubspec.yamlに設定が必要です
+              Image.asset(
+                'assets/images/your_character.png', // 実際の画像パスに置き換えてください
+                width: 200, // 画像のサイズ
+              ),
+            ],
           ),
         ),
       ),
