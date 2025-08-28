@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:math';
+import 'score_page.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -12,9 +13,11 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   int score = 0;
-  int remainingSeconds = 60; // 残り時間(秒)
+  int remainingSeconds = 60; 
   Timer? _timer;
   final _player = AudioPlayer();
+  bool _isFinished = false;
+  bool _started = false;
 
 List<Widget> _buildCircleItems(double radius) {
   final items = List.generate(12, (i) => i + 1);
@@ -44,13 +47,8 @@ List<Widget> _buildCircleItems(double radius) {
     });
   }
 
-  @override
-  void initState() { //初期化してタイマーを開始
-    super.initState();
-    _startCountdown();
-  }
-
   Future<void> _startCountdown() async {//タイマーの内容
+    _started = true;
     await _player.play(AssetSource('sounds/gamestart.mp3'));
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -61,6 +59,9 @@ List<Widget> _buildCircleItems(double radius) {
         });
       } else {
         t.cancel();
+        setState(() {
+        _isFinished = true; // タイマー終了を通知
+      });
         // ここでゲーム終了の処理とかはここに
       }
     });
@@ -74,21 +75,41 @@ List<Widget> _buildCircleItems(double radius) {
 
   @override
   Widget build(BuildContext context) {//UIとスコアとタイマーを表示
+    if (_isFinished){
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context)=>ScorePage(score: score),
+            ),
+       );
+      } );
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('Game')),
-      body: Stack(
-        children: [
-          Center(//キャラの画像を円形の枠で表示
-            child:ClipOval(
-               child: Image.asset(
-                 'lib/images/chara.png',
-                 width: 400,
-                 height: 400,
-                 fit: BoxFit.cover,
-                 ),
+      body:Stack(
+       children: [
+          Center(
+            child: !_started 
+            ? ElevatedButton(
+                onPressed: _startCountdown,
+                child: Text('ゲームスタート'),
               )
-          ),
-          ..._buildCircleItems(200),
+            : Stack(
+                alignment: Alignment.center,
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'lib/images/chara.png',
+                      width: 400,
+                      height: 400,
+                      fit: BoxFit.cover,
+                    )
+                  ,),
+                  ..._buildCircleItems(200),
+                ]
+              ),
+            ),
           // 右上にスコアとタイマーを縦並びで表示
           Positioned(
             right: 20,

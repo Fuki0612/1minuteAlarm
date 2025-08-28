@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+class ScorePage extends StatelessWidget{
+  final int score;
+  const ScorePage({super.key, required this.score});
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(title:const Text('game')),
+      body:Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("score: $score"),
+            ElevatedButton(
+              onPressed:(){
+                Navigator.pop(context);
+              },
+              child:const Text("戻る")
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
