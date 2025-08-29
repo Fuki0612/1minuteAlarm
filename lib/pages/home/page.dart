@@ -88,8 +88,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 50), // 現在時刻とアラーム時刻の間のスペース
-              // アラーム時刻の表示
+              const SizedBox(height: 50),
+
               Text(
                 'アラーム時刻: $_alarmTime',
                 style: const TextStyle(
@@ -99,13 +99,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              const SizedBox(height: 20), // アラーム時刻と画像の間のスペース
-              // キャラクター画像の表示
-              // assetsフォルダに画像を追加し、pubspec.yamlに設定が必要です
-              Image.asset(
-                'assets/images/your_character.png', // 実際の画像パスに置き換えてください
-                width: 200, // 画像のサイズ
-              ),
+              const SizedBox(height: 20),
+
+              Image.asset('lib/images/chara.png', width: 200),
             ],
           ),
         ),
