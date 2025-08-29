@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter_application_1/pages/home/page.dart';
+import 'pages/alarm/page.dart';
+import 'pages/collection/page.dart';
+import 'pages/game/page.dart';
+import 'pages/chat/page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,14 +42,14 @@ class _MyTitlePageState extends State<MyTitlePage> {
     switch (_selectedIndex) {
       case 0: // Home
         return HomePage();
-      case 1:
-        return const Center(child: Text('アラーム画面（未実装）'));
-      case 2:
-        return const Center(child: Text('チャット画面（未実装）'));
-      case 3:
-        return const Center(child: Text('コレクション画面（未実装）'));
-      case 4:
-        return const Center(child: Text('ゲーム画面（未実装）'));
+      case 1: // Alarm
+        return AlarmPage();
+      case 2: // Chat
+        return ChatPage();
+      case 3: // Collection
+        return CollectionPage();
+      case 4: // Game
+        return GamePage();
       default:
         return Center(child: Text('Page $_selectedIndex'));
     }

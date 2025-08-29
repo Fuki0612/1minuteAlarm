@@ -3,7 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import './function.dart';
 import './message.dart';
-import './gpt.dart'；
+import './gpt.dart';
+
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
@@ -81,14 +82,9 @@ class _ChatPageState extends State<ChatPage> {
       );
     });
 
-_messages.add(
-  ChatMessage(
-    text: gpt(text),
-    isUser: false,
-    timestamp: DateTime.now(),
-  ),
-  );
-)
+    _messages.add(
+      ChatMessage(text: gpt(text), isUser: false, timestamp: DateTime.now()),
+    );
     // メッセージを保存
     await _saveMessages();
 

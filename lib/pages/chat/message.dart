@@ -23,13 +23,17 @@ class MessageBubble extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               //アイコン追加
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: Colors.green.shade100,
-                child: const Icon(
-                  Icons.person, size: 20,color: Colors.green
+              if (message.isUser)
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Colors.green.shade100,
+                  child: const Icon(
+                    Icons.person,
+                    size: 20,
+                    color: Colors.green,
                   ),
-              ),
+                ),
+              const SizedBox(width: 8),
               // メッセージ
               Flexible(
                 child: Container(
@@ -39,11 +43,9 @@ class MessageBubble extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: message.isUser
-                    ?Colors.blue.shade500
-                    :Colors.grey.shade200,
-                    borderRadius:
-                    BorderRadius.circular(18),
-                    // チャット タスク1 メッセージの背景色
+                        ? Colors.blue.shade500
+                        : Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(18),
                   ),
                   child: Text(
                     message.text,
@@ -51,7 +53,6 @@ class MessageBubble extends StatelessWidget {
                   ),
                 ),
               ),
-              // チャット タスク2 ここにCircleAvatarを追加
             ],
           ),
           Padding(
