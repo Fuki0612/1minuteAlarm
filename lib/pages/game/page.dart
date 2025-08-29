@@ -90,12 +90,22 @@ List<Widget> _buildCircleItems(double radius) {
       body:Stack(
        children: [
           Center(
-            child: !_started 
+            child: !_started //ボタンを押してスタート
             ? ElevatedButton(
                 onPressed: _startCountdown,
-                child: Text('ゲームスタート'),
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),  
+                  minimumSize: Size(250, 250)
+                ),
+                child: Text(
+                  'ゲームスタート',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: "Roboto"
+                  ),
+                ),
               )
-            : Stack(
+            : Stack(//ボタンを押した後の表示
                 alignment: Alignment.center,
                 children: [
                   ClipOval(
@@ -110,7 +120,7 @@ List<Widget> _buildCircleItems(double radius) {
                 ]
               ),
             ),
-          // 右上にスコアとタイマーを縦並びで表示
+          // 右上にスコアとタイマーを横並びで表示
           Positioned(
             right: 20,
             top: 20,
