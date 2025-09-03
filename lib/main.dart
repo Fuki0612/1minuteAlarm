@@ -5,9 +5,14 @@ import 'pages/alarm/page.dart';
 import 'pages/collection/page.dart';
 import 'pages/game/page.dart';
 import 'pages/chat/page.dart';
+import 'pages/alarm/functions/notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 通知サービスを初期化
+  await SimpleNotificationService.initialize();
+
   runApp(const TitlePage());
 }
 
