@@ -90,27 +90,37 @@ class _GamePageState extends State<GamePage> {
       body: Stack(
         children: [
           Center(
-            child: !_started
-                ? ElevatedButton(
-                    onPressed: _startCountdown,
-                    child: Text('ゲームスタート'),
-                  )
-                : Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ClipOval(
-                        child: Image.asset(
-                          'lib/images/chara.png',
-                          width: 250,
-                          height: 250,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      ..._buildCircleItems(150),
-                    ],
+            child: !_started //ボタンを押してスタート
+            ? ElevatedButton(
+                onPressed: _startCountdown,
+                style: ElevatedButton.styleFrom(
+                  shape: CircleBorder(),  
+                  minimumSize: Size(250, 250)
+                ),
+                child: Text(
+                  'ゲームスタート',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: "Roboto"
                   ),
-          ),
-          // 右上にスコアとタイマーを縦並びで表示
+                ),
+              )
+            : Stack(//ボタンを押した後の表示
+                alignment: Alignment.center,
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'lib/images/chara.png',
+                      width: 400,
+                      height: 400,
+                      fit: BoxFit.cover,
+                    )
+                  ,),
+                  ..._buildCircleItems(200),
+                ]
+              ),
+            ),
+          // 右上にスコアとタイマーを横並びで表示
           Positioned(
             right: 20,
             top: 20,

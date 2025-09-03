@@ -10,12 +10,23 @@ class ScorePage extends StatelessWidget{
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("score: $score"),
+            Text(
+              "score: $score",
+              style: TextStyle(
+                fontSize : 30
+              )
+            ),
             ElevatedButton(
               onPressed:(){
                 Navigator.pop(context);
               },
-              child:const Text("戻る")
+              child:const Text(
+                "戻る",
+                style:TextStyle(
+                  fontSize: 30
+                )
+
+                )
             ),
           ],
         ),
