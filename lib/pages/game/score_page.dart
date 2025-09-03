@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 class ScorePage extends StatelessWidget{
   final int score;
-  const ScorePage({super.key, required this.score});
+  final Function reset;
+  const ScorePage({
+    super.key,
+    required this.score,
+    required this.reset,
+  });
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -18,6 +23,7 @@ class ScorePage extends StatelessWidget{
             ),
             ElevatedButton(
               onPressed:(){
+                reset();
                 Navigator.pop(context);
               },
               child:const Text(
