@@ -10,17 +10,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _currentTime = '';
-  // アラーム時刻を保持する変数
-  String _alarmTime = "12:00:00";
+  final _alarmDateTime = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+    13,
+    05,
+    00,
+  );
+  String _alarmTime = "13:05:00";
   Timer? _timer;
+  bool _isButtonEnabled = false;
 
   void _updateTime() {
-    final now = DateTime.now(); // 現在の時刻を取得
+    final now = DateTime.now();
+    final difference = now.difference(_alarmDateTime).inSeconds.abs();
+
     setState(() {
       _currentTime =
-          '${now.hour.toString().padLeft(2, '0')}:' //Hourの表示
-          '${now.minute.toString().padLeft(2, '0')}:' //Minuteの表示
+          '${now.hour.toString().padLeft(2, '0')}:'
+          '${now.minute.toString().padLeft(2, '0')}:'
           '${now.second.toString().padLeft(2, '0')}';
+      _isButtonEnabled = difference <= 60;
     });
   }
 
@@ -49,7 +60,6 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 既存の現在時刻表示コンテナ
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -100,7 +110,35 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: _isButtonEnabled
+                      ? Colors.red
+                      : Colors.grey, // ボタンの色を変更
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 15,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                onPressed: _isButtonEnabled
+                    ? () {
+                        // 仮の処理
+                        print('Alarm stopped!');
+                      }
+                    : null, // 無効な場合はonPressedをnullに
+                child: Text(
+                  'アラームを止める',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: _isButtonEnabled ? Colors.white : Colors.white54,
+                  ),
+                ),
+              ),
 
+              const SizedBox(height: 20),
               Image.asset('lib/images/chara.png', width: 200),
             ],
           ),
