@@ -1,0 +1,45 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "1minuteAlarm",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "1minuteAlarm (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "1minuteAlarm (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "1minuteAlarm",
+            "cwd": "1minuteAlarm",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "1minuteAlarm (profile mode)",
+            "cwd": "1minuteAlarm",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "1minuteAlarm (release mode)",
+            "cwd": "1minuteAlarm",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
