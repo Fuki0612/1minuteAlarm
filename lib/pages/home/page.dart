@@ -100,6 +100,12 @@ class _HomePageState extends State<HomePage> {
               ),
 
               const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // アラームを設定する処理
+                },
+                child: const Text('画像を表示'),
+              ),
 
               Image.asset('lib/images/chara.png', width: 200),
             ],
