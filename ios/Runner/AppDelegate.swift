@@ -1,20 +1,18 @@
-import Flutter
 import UIKit
+import Flutter
 import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
+
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
-    
-    // iOS 10以降の通知設定
+
     if #available(iOS 10.0, *) {
-      UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-      
-      // 通知権限をリクエスト
+      UNUserNotificationCenter.current().delegate = self
       UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
         if granted {
           print("iOS通知権限が許可されました")
@@ -23,26 +21,7 @@ import UserNotifications
         }
       }
     }
-    
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-}
 
-// iOS 10以降の通知デリゲートメソッド
-@available(iOS 10, *)
-extension AppDelegate : UNUserNotificationCenterDelegate {
-  
-  // フォアグラウンドで通知を受信した時の処理
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              willPresent notification: UNNotification,
-                              withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    completionHandler([.alert, .badge, .sound])
-  }
-  
-  // 通知をタップした時の処理
-  func userNotificationCenter(_ center: UNUserNotificationCenter,
-                              didReceive response: UNNotificationResponse,
-                              withCompletionHandler completionHandler: @escaping () -> Void) {
-    completionHandler()
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
