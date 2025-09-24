@@ -30,7 +30,6 @@ class _GamePageState extends State<GamePage> {
   bool _explained = false;
   bool _isFinished = false;
   
-
   List<Color> colors = List.generate(12, (i) =>i ==0?Colors.green:Colors.black);
   final List<int> picks = List.generate(12, (i)=>i);
 
@@ -252,9 +251,10 @@ class _GamePageState extends State<GamePage> {
   }
 
   @override
-  Widget build(BuildContext context) {//UIとスコアとタイマーを表示
-    if (_isFinished){
-      WidgetsBinding.instance.addPostFrameCallback((_){
+  Widget build(BuildContext context) {
+    //UIとスコアとタイマーを表示
+    if (_isFinished) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.push(
           context,
           MaterialPageRoute(
