@@ -13,50 +13,64 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isUser = message.isUser;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment:
+            isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Row(
-            // 横並び
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment:
+                isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //アイコン追加
-              if (message.isUser)
+              // アイコン左
+              if (!isUser)
                 CircleAvatar(
                   radius: 16,
                   backgroundColor: Colors.green.shade100,
-                  child: const Icon(
-                    Icons.person,
-                    size: 20,
-                    color: Colors.green,
-                  ),
+                  child: const Icon(Icons.android,
+                      size: 20, color: Colors.green),
                 ),
               const SizedBox(width: 8),
               // メッセージ
               Flexible(
                 child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,
                   ),
                   decoration: BoxDecoration(
-                    color: message.isUser
-                        ? Colors.blue.shade500
+                    color: isUser
+                        ? Colors.blue.shade200
                         : Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(18),
                   ),
                   child: Text(
                     message.text,
-                    style: TextStyle(color: Colors.black87, fontSize: 16),
+                    style: TextStyle(
+                      color: isUser ? Colors.white : Colors.black87,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
+              // アイコン右
+              if (isUser)
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Colors.blue.shade100,
+                  child: const Icon(Icons.person,
+                      size: 20, color: Colors.blue),
+                ),
             ],
           ),
+
+          // 時刻
           Padding(
-            padding: EdgeInsets.only(top: 2),
+            padding: const EdgeInsets.only(top: 2, left: 8, right: 8),
             child: Text(
               _formatTime(message.timestamp),
               style: TextStyle(fontSize: 11, color: Colors.grey.shade600),

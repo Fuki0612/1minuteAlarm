@@ -82,9 +82,13 @@ class _ChatPageState extends State<ChatPage> {
       );
     });
 
-    _messages.add(
-      ChatMessage(text: gpt(text), isUser: false, timestamp: DateTime.now()),
-    );
+_messages.add(
+  ChatMessage(
+    text: gpt(text),
+    isUser: false,
+    timestamp: DateTime.now(),
+  ),
+  );
     // メッセージを保存
     await _saveMessages();
 
