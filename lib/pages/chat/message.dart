@@ -33,7 +33,7 @@ class MessageBubble extends StatelessWidget {
                   child: const Icon(Icons.android,
                       size: 20, color: Colors.green),
                 ),
-
+              const SizedBox(width: 8),
               // メッセージ
               Flexible(
                 child: Container(
@@ -57,7 +57,6 @@ class MessageBubble extends StatelessWidget {
                   ),
                 ),
               ),
-
               // アイコン右
               if (isUser)
                 CircleAvatar(

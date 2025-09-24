@@ -4,6 +4,7 @@ import 'dart:convert';
 import './function.dart';
 import './message.dart';
 import './gpt.dart';
+
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
@@ -88,7 +89,6 @@ _messages.add(
     timestamp: DateTime.now(),
   ),
   );
-
     // メッセージを保存
     await _saveMessages();
 
