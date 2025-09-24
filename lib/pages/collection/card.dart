@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'detail.dart';
 
 class CardInfoClass {
   final String name;
@@ -230,8 +231,7 @@ class ImageDetailDialog extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('閉じる'),
-                    ),
+                      child: const Text('閉じる'),                    ),
                   ),
                 ],
               ),

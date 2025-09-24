@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'pages/home/page.dart';
+import 'package:flutter_application_1/pages/home/page.dart';
 import 'pages/alarm/page.dart';
 import 'pages/collection/page.dart';
 import 'pages/game/page.dart';
 import 'pages/chat/page.dart';
+import 'pages/alarm/functions/notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 通知サービスを初期化
+  await SimpleNotificationService.initialize();
 
   runApp(const TitlePage());
 }
@@ -61,16 +65,18 @@ class _MyTitlePageState extends State<MyTitlePage> {
     return Scaffold(
       body: _pages(),
       bottomNavigationBar: ConvexAppBar(
-        // タイトル タスク.1
-        items: [
-          // タイトル タスク.2
+        style: TabStyle.react,
+        color: Colors.white,
+        backgroundColor: Colors.blue,
+        activeColor: Colors.white,
+        initialActiveIndex: _selectedIndex,
+        items: const [
           TabItem(icon: Icons.home, title: 'Home'),
           TabItem(icon: Icons.alarm, title: 'Alarm'),
           TabItem(icon: Icons.chat, title: 'Chat'),
           TabItem(icon: Icons.collections, title: 'Collection'),
           TabItem(icon: Icons.gamepad, title: 'Game'),
         ],
-        initialActiveIndex: _selectedIndex,
         onTap: (int index) {
           setState(() {
             _selectedIndex = index;
