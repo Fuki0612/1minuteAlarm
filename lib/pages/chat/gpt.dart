@@ -1,3 +1,4 @@
 String gpt(String input) {
-  return "今はテストです．";
+  // 今は固定で返す
+  return "テストです";
 }
