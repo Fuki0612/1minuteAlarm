@@ -82,17 +82,57 @@ class _ChatPageState extends State<ChatPage> {
       );
     });
 
-_messages.add(
-  ChatMessage(
-    text: gpt(text),
-    isUser: false,
-    timestamp: DateTime.now(),
-  ),
-  );
+    // "考え中..."メッセージを追加
+    final thinkingMessage = ChatMessage(
+      text: "考え中...",
+      isUser: false,
+      timestamp: DateTime.now(),
+    );
+
+    setState(() {
+      _messages.add(thinkingMessage);
+    });
+
+    // メッセージを保存とスクロール
+    await _saveMessages();
+    _scrollToBottom();
+
+    try {
+      // ChatGPTからの応答を取得（非同期）
+      final gptResponse = await gpt(text.trim());
+
+      // "考え中..."メッセージを削除してGPTの応答に置き換える
+      setState(() {
+        _messages.removeLast(); // "考え中..."メッセージを削除
+        _messages.add(
+          ChatMessage(
+            text: gptResponse,
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
+      });
+    } catch (e) {
+      // エラーが発生した場合
+      setState(() {
+        _messages.removeLast(); // "考え中..."メッセージを削除
+        _messages.add(
+          ChatMessage(
+            text: "エラーが発生しました: ${e.toString()}",
+            isUser: false,
+            timestamp: DateTime.now(),
+          ),
+        );
+      });
+    }
+
     // メッセージを保存
     await _saveMessages();
+    _scrollToBottom();
+  }
 
-    // メッセージリストの最下部にスクロール
+  // スクロール機能を別メソッドに分離
+  void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(

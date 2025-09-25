@@ -6,12 +6,20 @@ import 'pages/collection/page.dart';
 import 'pages/game/page.dart';
 import 'pages/chat/page.dart';
 import 'pages/alarm/functions/notification.dart';
+import 'services/alarm_service.dart';
+import 'pages/chat/gpt.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 通知サービスを初期化
   await SimpleNotificationService.initialize();
+
+  // アラーム通知サービスを初期化
+  await AlarmService.initialize();
+
+  // ChatGPTサービスを初期化
+  ChatGPTService.initialize();
 
   runApp(const TitlePage());
 }
@@ -42,13 +50,28 @@ class MyTitlePage extends StatefulWidget {
 
 class _MyTitlePageState extends State<MyTitlePage> {
   int _selectedIndex = 0;
+  String alarmTime = '12:00:00';
 
   Widget _pages() {
     switch (_selectedIndex) {
       case 0: // Home
-        return HomePage();
+        return HomePage(
+          alarmTime: alarmTime,
+          onAlarmTimeChanged: (newTime) {
+            setState(() {
+              alarmTime = newTime;
+            });
+          },
+        );
       case 1: // Alarm
-        return AlarmPage();
+        return AlarmScreen(
+          alarmTime: alarmTime,
+          onAlarmTimeChanged: (newTime) {
+            setState(() {
+              alarmTime = newTime;
+            });
+          },
+        );
       case 2: // Chat
         return ChatPage();
       case 3: // Collection

@@ -210,13 +210,10 @@ class ImageDetailDialog extends StatelessWidget {
                   children: [
                     Text(
                       '入手日: $dateStr',
-                      style: const TextStyle(fontSize: 14, color: Colors.black87),
-                    ),
-                    const SizedBox(height: 8),
-                    // 必要ならここに説明文を足す（現状は未定義）
-                    Text(
-                      'ここに説明を追加',
-                      style: const TextStyle(fontSize: 13, color: Colors.black54),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
                     ),
                   ],
                 ),
@@ -231,7 +228,8 @@ class ImageDetailDialog extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('閉じる'),                    ),
+                      child: const Text('閉じる'),
+                    ),
                   ),
                 ],
               ),
